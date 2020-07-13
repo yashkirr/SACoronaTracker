@@ -7,20 +7,17 @@ Purpose: Managing File I/O
 """
 import pickle
 
-class File:
-    def __init__(self,file):
-        self.file = file
-        f = open(self.file, "w")
-        f.close()
 
-    def writeToFile(self,object):
-        f = open(self.file,'wb')
-        pickle.dump(object,f)
-        f.close()
-        print("Saved hash")
+def writeToFile(file, object):
+    f = open(file, 'wb')
+    print("Saving", object)
+    pickle.dump(object, f)
+    f.close()
+    print("NOTICE: Saved hash")
 
-    def readFromFile(self):
-        f = open(self.file,'rb')
-        object = pickle.load(f)
-        f.close()
-        return object
+
+def readFromFile(file):
+    f = open(file, 'rb')
+    object = pickle.load(f)
+    f.close()
+    return object
