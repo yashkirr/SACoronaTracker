@@ -5,6 +5,7 @@ Date: 2020/07/13
 
 Purpose: Bot which tweets corona virus stat updates
 """
+import time
 
 import tweepy
 import webParser
@@ -55,7 +56,7 @@ def getTrendingTag():
     trends = trends_dict[0]
     trends_dict_sum = {}
     for dict in trends['trends']:
-        if dict['tweet_volume'] == None:
+        if dict['tweet_volume'] is None:
             dict['tweet_volume'] = 0
         trends_dict_sum[dict['name']] = dict['tweet_volume']
     print("Finding most popular tag from: ", trends_dict_sum)
@@ -64,13 +65,18 @@ def getTrendingTag():
 
 # Run Bot
 def main():
-    stats = webParser.getNationalStats()
-    cases = stats[0]
-    deaths = stats[1]
-    recoveries = stats[2]
-    active_cases = stats[0] - stats[2]
-    tweet(cases, deaths, recoveries, active_cases)
-
+    while(True):
+        stats = webParser.getNationalStats()
+        cases = stats[0]
+        deaths = stats[1]
+        recoveries = stats[2]
+        active_cases = stats[0] - stats[2]
+        tweet(cases, deaths, recoveries, active_cases)
+        print("Sleeping for the next 24hours")
+        time.sleep(86400)
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except:
+        twitter_account.send_direct_message(yashkirr_id,"I broke. Check me please")
