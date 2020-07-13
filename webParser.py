@@ -10,7 +10,8 @@ import requests
 from bs4 import BeautifulSoup
 
 DATA_SOURCE = "https://www.worldometers.info/coronavirus/country/south-africa/"
-stats = []
+stats = []  # in case there's a need to implement more
+
 
 def parse():
     print("Getting web content")
@@ -18,14 +19,15 @@ def parse():
     soup = BeautifulSoup(web_page, "html.parser")
     print("Parsing web content")
     for div in soup.find_all('div', class_='maincounter-number'):
-        stats.append(div.span.text)
+        stat = div.span.text
+        stats.append(int(stat.replace(',', '')))
+# returns list where:
+#   [0]: Cases
+#   [1]: Deaths
+#   [2]: Recoveries
+def getStats():
+    parse()
+    return stats
 
-def getCases():
-    return stats[0]
-
-def getDeaths():
-    return stats[1]
-
-def getRecovered():
-    return stats[2]
-
+if __name__ == "__main__":
+    print(getStats())
