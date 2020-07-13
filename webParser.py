@@ -25,9 +25,9 @@ def parse():
 #   [0]: Cases
 #   [1]: Deaths
 #   [2]: Recoveries
-def getStats():
+def getNationalStats():
     parse()
     return stats
 
 if __name__ == "__main__":
-    print(getStats())
+    print(getNationalStats())
