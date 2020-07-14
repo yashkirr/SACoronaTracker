@@ -5,8 +5,11 @@ Date: 2020/07/14
 
 Purpose: API used for getting data from coronatracker.com
 """
-
+import hashlib
 import requests
+
+def getHash():
+    return hashlib.sha256(str(getNationalStats()).encode('utf-8')).hexdigest()
 
 
 def getNationalStats():
@@ -17,3 +20,4 @@ def getNationalStats():
 
 if __name__ == "__main__":
     print(getNationalStats())
+    print(getHash())
