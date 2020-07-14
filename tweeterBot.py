@@ -21,8 +21,8 @@ wilting_rose = "\U0001F940"  # for deaths
 sneezing_face = "\U0001F927"  # for active cases
 sick_emoji = "\U0001F912"  # for active cases
 raising_hands = "\U0001F64C"  # for recoveries
-new_emoji = "\U0001F195" # for new cases
-hospital_emoji = "\U0001F3E5" # for critical cases
+new_emoji = "\U0001F195"  # for new cases
+hospital_emoji = "\U0001F3E5"  # for critical cases
 
 DATA_FILE = "data.txt"
 
@@ -32,7 +32,7 @@ twitter_account = tweepy.API(auth)
 
 
 # params: cases, deaths, recoveries, active_cases
-def tweet(c, d, r, a_c,icu):
+def tweet(c, d, r, a_c, icu):
     cases = "{:,}".format(c)
     deaths = "{:,}".format(d)
     recoveries = "{:,}".format(r)
@@ -47,21 +47,21 @@ def tweet(c, d, r, a_c,icu):
         "\n\n{chart_increasing} Cases: {cases}" \
         "\n{wilting_rose} Deaths: {deaths}" \
         "\n{raising_hands} Recoveries: {recoveries}" \
-        "\n{sneezing_face} Active Cases: {active_cases}"\
-        "\n{hospital_emoji} Cases in ICU: {critical_cases}"\
+        "\n{sneezing_face} Active Cases: {active_cases}" \
+        "\n{hospital_emoji} Cases in ICU: {critical_cases}" \
         "\n\n #SACoronaTracker #CoronaVirusSA #COVID19 {pop_tag}" \
             .format(cases=cases, deaths=deaths, recoveries=recoveries, active_cases=active_cases,
                     chart_increasing=chart_increasing, wilting_rose=wilting_rose, sneezing_face=sneezing_face,
-                    raising_hands=raising_hands, date=date, pop_tag=getTrendingTag(), hospital_emoji = hospital_emoji,
-                    critical_cases = critical_cases)
+                    raising_hands=raising_hands, date=date, pop_tag=getTrendingTag(), hospital_emoji=hospital_emoji,
+                    critical_cases=critical_cases)
     print("SUCCESS: Tweeting")
     print(status_text)
-    #twitter_account.update_status(status_text)
+    twitter_account.update_status(status_text)
     print("SUCCESS: Tweeted!")
 
 
 def getTrendingTag():
-    trends_dict = twitter_account.trends_place(23424942)
+    trends_dict = twitter_account.trends_place(23424942)  # woeid for South Africa
     trends = trends_dict[0]
     trends_dict_sum = {}
     for dict in trends['trends']:
@@ -71,11 +71,13 @@ def getTrendingTag():
     print("NOTICE: Finding most popular tag from: ", trends_dict_sum)
     return max(trends_dict_sum.items(), key=operator.itemgetter(1))[0]
 
+
 def setupDatabase():
     data_dict = {"last_seen_id": 0000,
                  "old_hash": "0a0a0a"
-    }
-    writeToFile(DATA_FILE,data_dict)
+                 }
+    writeToFile(DATA_FILE, data_dict)
+
 
 # Run Bot
 def main():
@@ -86,12 +88,13 @@ def main():
         print("RUNNING: Checking Hashes")
         old_hash = readFromFile(DATA_FILE).get("old_hash")
         current_hash = CoronaTrackerAPI.getHash()
-        print(old_hash,current_hash)
+        print(old_hash, current_hash)
         if old_hash == current_hash:
             south_africa = timezone('Africa/Johannesburg')
             sa_time = datetime.now(south_africa)
             date = sa_time.strftime('%H:%M')
-            print("NOTICE: Checked for data update at",date,"and there is no change.\nGoing back to sleep for 3 hours.")
+            print("NOTICE: Checked for data update at", date,
+                  "and there is no change.\nGoing back to sleep for 3 hours.")
 
         else:
             print("NOTICE: New data found, sending a tweet.")
@@ -102,15 +105,15 @@ def main():
             active_cases = stats[0] - stats[2]
             critical_cases = stats[3]
             try:
-                tweet(cases, deaths, recoveries, active_cases,critical_cases)
+                tweet(cases, deaths, recoveries, active_cases, critical_cases)
                 print("SUCCESS: Tweet sent.")
             except tweepy.error.TweepError:
                 print("NOTICE: Tweet already sent, hash has changed.")
             print("NOTICE: Updating Hashes.")
             data_dict = {"last_seen_id": 0000,
-                 "old_hash": current_hash
-            }
-            writeToFile(DATA_FILE,data_dict)
+                         "old_hash": current_hash
+                         }
+            writeToFile(DATA_FILE, data_dict)
             print("NOTICE: Saved Data. Going back to sleep")
         time.sleep(3600)
 
