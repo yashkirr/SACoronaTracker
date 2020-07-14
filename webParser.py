@@ -3,7 +3,7 @@ Author: Yashkir Ramsamy
 Contact: me@yashkir.co.za
 Date: 2020/07/13
 
-Purpose:
+Purpose: Parse Stats from worldometers.info
 """
 
 import requests
