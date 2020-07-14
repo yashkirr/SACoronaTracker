@@ -31,13 +31,16 @@ auth.set_access_token(access_token, access_token_secret)
 twitter_account = tweepy.API(auth)
 
 
-# params: cases, deaths, recoveries, active_cases
-def tweet(c, d, r, a_c, icu):
+# params: cases, deaths, recoveries, active_cases, critical_cases, fatality_rate, recovery_rate
+def tweet(c, d, r, a_c, icu,fr,pr):
     cases = "{:,}".format(c)
     deaths = "{:,}".format(d)
     recoveries = "{:,}".format(r)
     active_cases = "{:,}".format(a_c)
     critical_cases = "{:,}".format(icu)
+    fatality_rate = "{:.1f}".format(float(fr))
+    recovery_rate = "{:.1f}".format(float(pr))
+
     south_africa = timezone('Africa/Johannesburg')
     sa_time = datetime.now(south_africa)
     date = sa_time.strftime('%d/%m')
@@ -49,11 +52,12 @@ def tweet(c, d, r, a_c, icu):
         "\n{raising_hands} Recoveries: {recoveries}" \
         "\n{sneezing_face} Active Cases: {active_cases}" \
         "\n{hospital_emoji} Cases in ICU: {critical_cases}" \
-        "\n\n #SACoronaTracker #CoronaVirusSA #COVID19 {pop_tag}" \
+        "\n\nFatality Rate: {fatality_rate}%      Recovery Rate: {recovery_rate}%"\
+        "\n\n#SACoronaTracker #CoronaVirusSA #COVID19 {pop_tag}" \
             .format(cases=cases, deaths=deaths, recoveries=recoveries, active_cases=active_cases,
                     chart_increasing=chart_increasing, wilting_rose=wilting_rose, sneezing_face=sneezing_face,
                     raising_hands=raising_hands, date=date, pop_tag=getTrendingTag(), hospital_emoji=hospital_emoji,
-                    critical_cases=critical_cases)
+                    critical_cases=critical_cases, recovery_rate = recovery_rate, fatality_rate = fatality_rate)
     print("SUCCESS: Tweeting")
     print(status_text)
     twitter_account.update_status(status_text)
@@ -104,8 +108,10 @@ def main():
             recoveries = stats[2]
             active_cases = stats[0] - stats[2]
             critical_cases = stats[3]
+            fatality_rate = stats[4]
+            recovery_rate = stats[5]
             try:
-                tweet(cases, deaths, recoveries, active_cases, critical_cases)
+                tweet(cases, deaths, recoveries, active_cases, critical_cases,fatality_rate,recovery_rate)
                 print("SUCCESS: Tweet sent.")
             except tweepy.error.TweepError:
                 print("NOTICE: Tweet already sent, hash has changed.")

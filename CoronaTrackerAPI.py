@@ -15,7 +15,8 @@ def getHash():
 def getNationalStats():
     result = requests.get("http://api.coronatracker.com/v3/stats/worldometer/country", {"countryCode": "ZA"})
     response = result.json()[0]
-    stats = [response["totalConfirmed"], response["totalDeaths"], response["totalRecovered"], response["totalCritical"]]
+    stats = [response["totalConfirmed"], response["totalDeaths"], response["totalRecovered"], response["totalCritical"],
+             response["FR"],response["PR"]]
     return stats
 
 if __name__ == "__main__":
