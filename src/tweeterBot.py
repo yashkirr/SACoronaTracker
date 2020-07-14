@@ -7,11 +7,11 @@ Purpose: Bot which tweets corona virus stat updates
 """
 import time
 import tweepy
-import CoronaTrackerAPI
+from src import CoronaTrackerAPI
 import operator
 import traceback
-from fileOperations import *
-from config import *
+from src.fileOperations import *
+from src.config import *
 from datetime import datetime
 from pytz import timezone
 
