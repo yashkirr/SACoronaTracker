@@ -7,7 +7,7 @@ Purpose: Bot which tweets corona virus stat updates
 """
 import time
 import tweepy
-import webParser
+import CoronaTrackerAPI
 import operator
 import traceback
 from fileOperations import *
@@ -79,7 +79,7 @@ def main():
     while True:
         print("RUNNING: Checking Hashes")
         old_hash = readFromFile(DATA_FILE).get("old_hash")
-        current_hash = webParser.getHash()
+        current_hash = CoronaTrackerAPI.getHash()
         print(old_hash,current_hash)
         if old_hash == current_hash:
             south_africa = timezone('Africa/Johannesburg')
@@ -89,7 +89,7 @@ def main():
 
         else:
             print("NOTICE: New data found, sending a tweet.")
-            stats = webParser.getNationalStats()
+            stats = CoronaTrackerAPI.getNationalStats()
             cases = stats[0]
             deaths = stats[1]
             recoveries = stats[2]
@@ -105,7 +105,7 @@ def main():
             }
             writeToFile(DATA_FILE,data_dict)
             print("NOTICE: Saved Data. Going back to sleep")
-        time.sleep(10800)
+        time.sleep(3600)
 
 
 if __name__ == "__main__":
